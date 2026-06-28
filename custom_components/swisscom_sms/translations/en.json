@@ -1,0 +1,28 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Swisscom SMS",
+        "description": "Enter the client_id of your Swisscom Messaging API subscription. You can find it on developer.swisscom.com (Messaging / SMS product).",
+        "data": {
+          "client_id": "Swisscom client_id",
+          "name": "Notify service name"
+        }
+      },
+      "reconfigure": {
+        "title": "Change the Swisscom client_id",
+        "description": "Enter the new client_id. The existing notify service is kept.",
+        "data": {
+          "client_id": "Swisscom client_id"
+        }
+      }
+    },
+    "error": {
+      "invalid_client_id": "The client_id cannot be empty."
+    },
+    "abort": {
+      "already_configured": "This client_id is already configured.",
+      "reconfigure_successful": "client_id updated."
+    }
+  }
+}
