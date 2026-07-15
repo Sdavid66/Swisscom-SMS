@@ -8,7 +8,7 @@ précisant les numéros destinataires et le message.
 ## Prérequis
 
 - Un abonnement à l'API **Swisscom Messaging** (produit SMS) sur
-  [developer.swisscom.com](https://developer.swisscom.com), qui vous donne un
+  [developer.swisscom.com](https://sms.icp.swisscom.com/home), qui vous donne un
   **`client_id`**.
 - Home Assistant 2024.11 ou plus récent.
 
