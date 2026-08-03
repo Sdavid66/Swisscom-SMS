@@ -130,4 +130,4 @@ de Swisscom SA.
 
 ## Licence
 
-[MIT](LICENSE)
+[GPL-3.0-or-later](LICENSE)

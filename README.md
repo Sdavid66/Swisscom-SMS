@@ -131,4 +131,4 @@ Swisscom AG.
 
 ## License
 
-[MIT](LICENSE)
+[GPL-3.0-or-later](LICENSE)
