@@ -1,92 +1,133 @@
-# Swisscom SMS pour Home Assistant
+<img src="https://raw.githubusercontent.com/Sdavid66/Swisscom-SMS/main/custom_components/swisscom_sms/brand/icon.png" alt="Swisscom SMS" width="96" align="right">
 
-Intégration personnalisée qui envoie des SMS via l'**API Swisscom Messaging**.
-Vous fournissez votre `client_id` Swisscom, et un service `notify` apparaît dans
-Home Assistant : utilisable dans vos automatisations, scripts et scènes en
-précisant les numéros destinataires et le message.
+# Swisscom SMS for Home Assistant
 
-## Prérequis
+[![Release](https://img.shields.io/github/v/release/Sdavid66/Swisscom-SMS)](https://github.com/Sdavid66/Swisscom-SMS/releases)
+[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
+[![License](https://img.shields.io/github/license/Sdavid66/Swisscom-SMS)](LICENSE)
 
-- Un abonnement à l'API **Swisscom Messaging** (produit SMS) sur
-  [developer.swisscom.com](https://sms.icp.swisscom.com/home), qui vous donne un
-  **`client_id`**.
-- Home Assistant 2024.11 ou plus récent.
+**Français : [README.fr.md](README.fr.md)**
+
+Send SMS from Home Assistant through the **Swisscom Messaging API**. You provide
+your Swisscom `client_id`, and a `notify` service appears in Home Assistant,
+ready to use in automations, scripts and scenes.
+
+## Requirements
+
+- A subscription to the **Swisscom Messaging API** (SMS product) on the
+  [Swisscom developer portal](https://sms.icp.swisscom.com/home), which gives
+  you a **`client_id`**.
+- Home Assistant **2026.3.0** or newer, required for the brand icons shipped
+  inside the integration.
 
 ## Installation
 
-### Via HACS (recommandé)
+### Through HACS
 
-1. HACS → Intégrations → menu ⋮ → **Dépôts personnalisés**.
-2. Ajoutez `https://github.com/Sdavid66/Homeassistant_Swisscom` (catégorie
-   *Integration*).
-3. Installez **Swisscom SMS**, puis redémarrez Home Assistant.
+[![Open your Home Assistant instance and open this repository inside HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Sdavid66&repository=Swisscom-SMS&category=integration)
 
-### Manuelle
+Until this repository is part of the HACS default store, add it manually:
 
-Copiez le dossier `custom_components/swisscom_sms` dans le dossier
-`custom_components` de votre configuration Home Assistant, puis redémarrez.
+1. HACS → menu ⋮ → **Custom repositories**.
+2. Add `https://github.com/Sdavid66/Swisscom-SMS`, category
+   *Integration*.
+3. Install **Swisscom SMS**, then restart Home Assistant.
+
+### Manually
+
+Copy `custom_components/swisscom_sms` into the `custom_components` folder of
+your Home Assistant configuration, then restart.
 
 ## Configuration
 
-1. **Paramètres → Appareils et services → Ajouter une intégration**.
-2. Cherchez **Swisscom SMS**.
-3. Renseignez votre `client_id` Swisscom (et, éventuellement, le nom du service
-   notify — par défaut `Swisscom SMS`).
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=swisscom_sms)
 
-Un service `notify.swisscom_sms` est alors créé (le nom suit celui que vous
-avez choisi).
+1. **Settings → Devices & services → Add integration**.
+2. Search for **Swisscom SMS**.
+3. Enter your Swisscom `client_id` and, optionally, the name of the notify
+   service (`Swisscom SMS` by default).
 
-## Utilisation
+A `notify.swisscom_sms` service is created, named after your choice. Adding a
+second entry with another `client_id` creates a second service.
 
-Le service envoie un SMS à chaque numéro listé dans `target`. Un numéro valide
-commence par `0`, `00` ou `+` et contient 7 à 15 chiffres (les numéros locaux
-en `0` sont préfixés `+41` par Swisscom).
+To change the `client_id` later: integration → **Reconfigure**.
 
-### Exemple simple
+## Usage
+
+The service sends one SMS per number listed in `target`. A valid number starts
+with `0`, `00` or `+` and contains 7 to 15 digits — local numbers starting with
+`0` are prefixed with `+41` by Swisscom.
 
 ```yaml
-service: notify.swisscom_sms
+action: notify.swisscom_sms
 data:
-  message: "Le portail du garage est resté ouvert."
+  message: "The garage door was left open."
   target:
     - "+41791234567"
 ```
 
-### Plusieurs destinataires
+Several recipients:
 
 ```yaml
-service: notify.swisscom_sms
+action: notify.swisscom_sms
 data:
-  message: "Alarme déclenchée à la maison !"
+  message: "Alarm triggered at home!"
   target:
     - "+41791234567"
     - "+41789876543"
 ```
 
-### Dans une automatisation
+In an automation:
 
 ```yaml
 automation:
-  - alias: "Alerte fuite d'eau"
-    trigger:
-      - platform: state
-        entity_id: binary_sensor.detecteur_fuite_cuisine
+  - alias: "Water leak alert"
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.kitchen_leak_detector
         to: "on"
-    action:
-      - service: notify.swisscom_sms
+    actions:
+      - action: notify.swisscom_sms
         data:
-          message: "Fuite d'eau détectée dans la cuisine !"
+          message: "Water leak detected in the kitchen!"
           target:
             - "+41791234567"
 ```
 
-## Dépannage
+## Troubleshooting
 
-- Les erreurs d'envoi (mauvais `client_id`, numéro invalide, quota épuisé…)
-  sont écrites dans les **journaux** de Home Assistant
-  (`Paramètres → Système → Journaux`), avec le code HTTP renvoyé par Swisscom.
-- `HTTP 401` : `client_id` manquant ou incorrect.
-- `HTTP 400` : numéro de téléphone invalide.
-- `HTTP 429` : quota d'envoi épuisé.
+Send failures are written to the Home Assistant **logs**
+(*Settings → System → Logs*) together with the HTTP status returned by
+Swisscom:
 
-Pour modifier le `client_id` ultérieurement : intégration → **Reconfigurer**.
+| Status | Meaning |
+|---|---|
+| `400` | Invalid phone number |
+| `401` | Missing or incorrect `client_id` |
+| `429` | Sending quota exhausted |
+
+The startup warning `We found a custom integration swisscom_sms which has not
+been tested by Home Assistant` is **normal** for every custom integration and
+can be ignored.
+
+## Known limitations
+
+- **One way only.** The integration sends SMS; it does not receive them and
+  reports no delivery receipt.
+- **A failure does not stop an automation.** A rejected message is logged as an
+  error, but the service call itself succeeds.
+- **Legacy notify service.** The integration exposes a `notify.<name>` service
+  supporting `target`, not a notify *entity*.
+- **The icon only appears once installed.** The HACS dashboard reads its
+  thumbnails from `data-v2.hacs.xyz`, which ignores icons shipped inside an
+  integration ([hacs/integration#5171](https://github.com/hacs/integration/issues/5171)).
+
+## Disclaimer
+
+This is an independent community project. It is not affiliated with, endorsed
+by, or supported by Swisscom. *Swisscom* and the Swisscom logo are trademarks of
+Swisscom AG.
+
+## License
+
+[MIT](LICENSE)

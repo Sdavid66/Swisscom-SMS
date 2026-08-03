@@ -11,14 +11,31 @@ from homeassistant.components.notify import DOMAIN as NOTIFY_DOMAIN
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import discovery
+from homeassistant.helpers import config_validation as cv, discovery
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.typing import ConfigType
 from homeassistant.util import slugify
 
 from .api import SwisscomSmsClient
-from .const import CONF_CLIENT_ID, CONF_NAME, DEFAULT_NAME, DOMAIN
+from .const import CONF_CLIENT_ID, CONF_NAME, DATA_HASS_CONFIG, DEFAULT_NAME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
+
+# L'integration se configure uniquement depuis l'interface : aucune cle YAML
+# n'est acceptee sous `swisscom_sms:`.
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Memorise la configuration YAML globale.
+
+    `discovery.async_load_platform` doit recevoir la configuration reelle de
+    Home Assistant : lui passer un dictionnaire vide empecherait les
+    plateformes `notify:` declarees en YAML d'etre configurees si cette
+    integration charge le composant notify en premier.
+    """
+    hass.data[DATA_HASS_CONFIG] = config
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -37,7 +54,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             Platform.NOTIFY,
             DOMAIN,
             {CONF_NAME: name, "entry_id": entry.entry_id},
-            {},
+            hass.data.get(DATA_HASS_CONFIG, {}),
         )
     )
 

@@ -3,10 +3,14 @@
     "step": {
       "user": {
         "title": "Swisscom SMS",
-        "description": "Enter the client_id of your Swisscom Messaging API subscription. You can find it on developer.swisscom.com (Messaging / SMS product).",
+        "description": "Enter the client_id of your Swisscom Messaging API subscription. You will find it on the developer.swisscom.com portal (Messaging / SMS product).",
         "data": {
           "client_id": "Swisscom client_id",
           "name": "Notify service name"
+        },
+        "data_description": {
+          "client_id": "The key issued by Swisscom that identifies your application.",
+          "name": "Sets the name of the created service, for example notify.swisscom_sms."
         }
       },
       "reconfigure": {
