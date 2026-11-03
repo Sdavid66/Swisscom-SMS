@@ -95,11 +95,24 @@ automation:
             - "+41791234567"
 ```
 
+An automation stops at the SMS step if a message fails. To let it carry on
+regardless, add `continue_on_error`:
+
+```yaml
+- action: notify.swisscom_sms
+  continue_on_error: true
+  data:
+    message: "Water leak detected in the kitchen!"
+    target:
+      - "+41791234567"
+```
+
 ## Troubleshooting
 
-Send failures are written to the Home Assistant **logs**
-(*Settings → System → Logs*) together with the HTTP status returned by
-Swisscom:
+If a message cannot be sent, the action fails: the automation stops at that step
+and its trace lists the failed numbers with the HTTP status returned by Swisscom.
+Every number in `target` is still tried, so one bad number does not stop the
+others.
 
 | Status | Meaning |
 |---|---|
@@ -115,8 +128,6 @@ can be ignored.
 
 - **One way only.** The integration sends SMS; it does not receive them and
   reports no delivery receipt.
-- **A failure does not stop an automation.** A rejected message is logged as an
-  error, but the service call itself succeeds.
 - **Legacy notify service.** The integration exposes a `notify.<name>` service
   supporting `target`, not a notify *entity*.
 - **The icon only appears once installed.** The HACS dashboard reads its

@@ -95,10 +95,24 @@ automation:
             - "+41791234567"
 ```
 
+Une automatisation s'arrête à l'étape du SMS si un message échoue. Pour qu'elle
+continue malgré tout, ajoutez `continue_on_error` :
+
+```yaml
+- action: notify.swisscom_sms
+  continue_on_error: true
+  data:
+    message: "Fuite d'eau détectée dans la cuisine !"
+    target:
+      - "+41791234567"
+```
+
 ## Dépannage
 
-Les échecs d'envoi sont écrits dans les **journaux** de Home Assistant
-(*Paramètres → Système → Journaux*), avec le code HTTP renvoyé par Swisscom :
+Si un message ne peut pas être envoyé, l'action échoue : l'automatisation s'arrête
+à cette étape et sa trace indique les numéros en échec, avec le code HTTP renvoyé
+par Swisscom. Tous les numéros de `target` sont quand même tentés : un mauvais
+numéro n'empêche pas l'envoi aux autres.
 
 | Code | Signification |
 |---|---|
@@ -114,8 +128,6 @@ personnalisée et peut être ignoré.
 
 - **Envoi uniquement.** L'intégration envoie des SMS ; elle n'en reçoit pas et
   ne remonte aucun accusé de réception.
-- **Un échec n'interrompt pas une automatisation.** Un message refusé est
-  journalisé en erreur, mais l'appel du service réussit malgré tout.
 - **Service notify historique.** L'intégration expose un service
   `notify.<nom>` acceptant `target`, pas une *entité* notify.
 - **L'icône n'apparaît qu'après installation.** Le tableau de bord HACS tire ses

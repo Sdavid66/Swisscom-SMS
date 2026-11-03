@@ -28,5 +28,13 @@
       "already_configured": "Questo client_id è già configurato.",
       "reconfigure_successful": "client_id aggiornato."
     }
+  },
+  "exceptions": {
+    "no_target": {
+      "message": "Nessun destinatario: indica in `target` uno o più numeri di telefono, ad esempio +41791234567."
+    },
+    "send_failed": {
+      "message": "{failed} SMS su {total} non sono stati inviati: {details}"
+    }
   }
 }

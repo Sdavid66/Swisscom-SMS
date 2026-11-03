@@ -5,6 +5,7 @@ import logging
 
 from homeassistant.components.notify import ATTR_TARGET, BaseNotificationService
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .api import SwisscomSmsClient, SwisscomSmsError
@@ -33,21 +34,39 @@ class SwisscomSmsNotificationService(BaseNotificationService):
         self._client = client
 
     async def async_send_message(self, message: str = "", **kwargs) -> None:
-        """Envoie `message` aux numeros indiques dans `target`."""
+        """Envoie `message` a chaque numero de `target`.
+
+        Tous les numeros sont tentes : un numero refuse n'empeche pas l'envoi
+        aux suivants. Les echecs sont ensuite remontes a l'appelant en une
+        seule erreur, pour que l'automatisation et sa trace les signalent.
+        """
         targets = kwargs.get(ATTR_TARGET)
         if not targets:
-            _LOGGER.error(
-                "Aucun destinataire : precisez `target` avec un ou plusieurs "
-                "numeros de telephone (ex. +41791234567)"
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="no_target",
             )
-            return
 
         if isinstance(targets, str):
             targets = [targets]
 
+        failures: list[str] = []
         for number in targets:
             try:
                 await self._client.async_send(number, message)
                 _LOGGER.debug("SMS envoye a %s", number)
             except SwisscomSmsError as err:
-                _LOGGER.error("Echec de l'envoi du SMS : %s", err)
+                _LOGGER.debug("Echec de l'envoi du SMS : %s", err)
+                reason = f"HTTP {err.status}" if err.status else "no response"
+                failures.append(f"{number} ({reason})")
+
+        if failures:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="send_failed",
+                translation_placeholders={
+                    "failed": str(len(failures)),
+                    "total": str(len(targets)),
+                    "details": ", ".join(failures),
+                },
+            )

@@ -28,5 +28,13 @@
       "already_configured": "Diese client_id ist bereits konfiguriert.",
       "reconfigure_successful": "client_id aktualisiert."
     }
+  },
+  "exceptions": {
+    "no_target": {
+      "message": "Kein Empfänger: Gib unter `target` eine oder mehrere Telefonnummern an, zum Beispiel +41791234567."
+    },
+    "send_failed": {
+      "message": "{failed} von {total} SMS konnten nicht gesendet werden: {details}"
+    }
   }
 }
