@@ -3,7 +3,7 @@
 # Swisscom SMS pour Home Assistant
 
 [![Release](https://img.shields.io/github/v/release/Sdavid66/Swisscom-SMS)](https://github.com/Sdavid66/Swisscom-SMS/releases)
-[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
+[![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://hacs.xyz)
 [![Licence](https://img.shields.io/github/license/Sdavid66/Swisscom-SMS)](LICENSE)
 
 **English: [README.md](README.md)**
@@ -26,8 +26,10 @@ Assistant, utilisable dans vos automatisations, scripts et scènes.
 
 [![Ouvrir ce dépôt dans HACS sur votre instance Home Assistant.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Sdavid66&repository=Swisscom-SMS&category=integration)
 
-Tant que ce dépôt ne fait pas partie du magasin HACS par défaut, ajoutez-le
-manuellement :
+1. Dans HACS, cherchez **Swisscom SMS**.
+2. Téléchargez-le, puis redémarrez Home Assistant.
+
+S'il n'apparaît pas dans la recherche, ajoutez-le comme dépôt personnalisé :
 
 1. HACS → menu ⋮ → **Dépôts personnalisés**.
 2. Ajoutez `https://github.com/Sdavid66/Swisscom-SMS`, catégorie

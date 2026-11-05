@@ -4,7 +4,7 @@
 
 [![Release](https://img.shields.io/github/v/release/Sdavid66/Swisscom-SMS)](https://github.com/Sdavid66/Swisscom-SMS/releases)
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-support%20the%20project-orange?logo=buy-me-a-coffee&logoColor=white)](https://buymeacoffee.com/sdavid66)
-[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
+[![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://hacs.xyz)
 [![License](https://img.shields.io/github/license/Sdavid66/Swisscom-SMS)](LICENSE)
 
 **Français : [README.fr.md](README.fr.md)**
@@ -27,7 +27,10 @@ ready to use in automations, scripts and scenes.
 
 [![Open your Home Assistant instance and open this repository inside HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Sdavid66&repository=Swisscom-SMS&category=integration)
 
-Until this repository is part of the HACS default store, add it manually:
+1. In HACS, search for **Swisscom SMS**.
+2. Download it, then restart Home Assistant.
+
+If it does not show up in the search, add it as a custom repository:
 
 1. HACS → menu ⋮ → **Custom repositories**.
 2. Add `https://github.com/Sdavid66/Swisscom-SMS`, category
